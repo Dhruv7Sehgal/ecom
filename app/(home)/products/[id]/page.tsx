@@ -35,7 +35,18 @@ async function ProductPage({ params }: { params: { id: string } }) {
                 <button className="ml-1 h-6 w-6 rounded-full border-2 border-gray-300 bg-green-200 focus:outline-none"></button>
               </div>
             </div>
-            {/* <div className="flex items-center justify-between">
+            <AddToCartButton product={product} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default ProductPage;
+
+{
+  /* <div className="flex items-center justify-between">
               <span className="title-font text-xl font-bold text-gray-900">
                 ${product.price}
               </span>
@@ -46,13 +57,5 @@ async function ProductPage({ params }: { params: { id: string } }) {
               >
                 Add to Cart
               </button>
-            </div> */}
-            <AddToCartButton product={product} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+            </div> */
 }
-
-export default ProductPage;
