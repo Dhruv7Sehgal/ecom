@@ -1,8 +1,8 @@
 "use server";
 
 import Product from "@/database/product.model";
-import { connectToDatabase } from "../moongose";
 import { revalidatePath } from "next/cache";
+import { connectToDatabase } from "../moongose";
 
 export async function getProducts(params: any) {
   try {
@@ -10,38 +10,61 @@ export async function getProducts(params: any) {
 
     const products = await Product.find({});
 
+    console.log(products);
+
     return { products };
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
 
-export async function addProduct(params: any) {
+interface AddProductParams {
+  title: string;
+  description: string;
+  price: number;
+  discountPrice: number;
+  brand: string;
+  stock: number;
+  category: string;
+  thumbnail: string;
+}
+
+export async function addProduct(params: AddProductParams) {
   try {
     connectToDatabase();
 
-    const { title, description, prize, discountPrice, brand, stock, category } =
-      params;
+    const {
+      title,
+      thumbnail,
+      description,
+      price,
+      discountPrice,
+      brand,
+      stock,
+      category,
+    } = params;
 
     console.log(params);
-
     await Product.create({
       title,
       description,
-      prize,
-      discountPrice,
+      price: Number(price),
+      discountPrice: Number(discountPrice),
       brand,
+      thumbnail,
       stock,
       category,
     });
 
     revalidatePath("/");
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
 
-export async function deleteProduct(params) {
+export async function deleteProduct(params: any) {
   try {
     connectToDatabase();
     const { productId } = params;
@@ -50,17 +73,19 @@ export async function deleteProduct(params) {
 
     revalidatePath("/");
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
 
-export async function findProductById(params) {
+export async function findProductById(params: any) {
   try {
     const { productId } = params;
 
     const product = await Product.findById(productId);
     return product;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
