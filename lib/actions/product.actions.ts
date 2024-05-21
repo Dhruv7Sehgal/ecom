@@ -19,7 +19,7 @@ export async function getProducts(params: any) {
   }
 }
 
-interface AddProductParams {
+export interface ProductParams {
   title: string;
   description: string;
   price: number;
@@ -30,7 +30,7 @@ interface AddProductParams {
   thumbnail: string;
 }
 
-export async function addProduct(params: AddProductParams) {
+export async function addProduct(params: ProductParams) {
   try {
     connectToDatabase();
 
