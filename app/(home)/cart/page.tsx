@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/store/cartStore";
 import Image from "next/image";
-import React from "react";
 
-function MinusIcon(props) {
+function MinusIcon(props: any) {
   return (
     <svg
       {...props}
@@ -23,7 +22,7 @@ function MinusIcon(props) {
   );
 }
 
-function PlusIcon(props) {
+function PlusIcon(props: any) {
   return (
     <svg
       {...props}
@@ -45,12 +44,13 @@ function PlusIcon(props) {
 
 export default function Component() {
   const cart = useCartStore((state) => state.cart);
-
+  const incrementQuantity = useCartStore((state) => state.incrementQuantity);
+  const decrementQuantity = useCartStore((state) => state.decrementQuantity);
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const calculateTaxes = (subtotal) => {
+  const calculateTaxes = (subtotal: number) => {
     const taxRate = 0.085; // Example tax rate
     return subtotal * taxRate;
   };
@@ -60,11 +60,11 @@ export default function Component() {
   const total = subtotal + taxes;
 
   return (
-    <div className="container mx-auto py-12 px-4 md:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
-      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8">
+    <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
+      <h1 className="mb-8 text-3xl font-bold">Shopping Cart</h1>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
-          <div className="border rounded-lg overflow-hidden">
+          <div className="overflow-hidden rounded-lg border">
             <div className="grid grid-cols-[80px_1fr_80px] items-center gap-4 bg-gray-100 px-4 py-3 dark:bg-gray-800">
               <span className="font-medium">Product</span>
               <span className="font-medium">Price</span>
@@ -94,12 +94,22 @@ export default function Component() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button className="h-8 w-8" size="icon" variant="outline">
-                      <MinusIcon className="h-4 w-4" />
+                    <Button
+                      onClick={() => decrementQuantity(item._id)}
+                      className="size-8"
+                      size="icon"
+                      variant="outline"
+                    >
+                      <MinusIcon className="size-4" />
                     </Button>
                     <span>{item.quantity}</span>
-                    <Button className="h-8 w-8" size="icon" variant="outline">
-                      <PlusIcon className="h-4 w-4" />
+                    <Button
+                      onClick={() => incrementQuantity(item._id)}
+                      className="size-8"
+                      size="icon"
+                      variant="outline"
+                    >
+                      <PlusIcon className="size-4" />
                     </Button>
                   </div>
                 </div>
@@ -110,8 +120,8 @@ export default function Component() {
             <Button variant="outline">Continue Shopping</Button>
           </div>
         </div>
-        <div className="bg-gray-100 rounded-lg p-6 dark:bg-gray-800">
-          <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
+        <div className="rounded-lg bg-gray-100 p-6 dark:bg-gray-800">
+          <h2 className="mb-4 text-2xl font-bold">Order Summary</h2>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span>Subtotal</span>
@@ -121,7 +131,7 @@ export default function Component() {
               <span>Taxes</span>
               <span>${taxes.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between font-medium text-lg">
+            <div className="flex justify-between text-lg font-medium">
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>

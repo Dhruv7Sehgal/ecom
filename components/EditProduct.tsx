@@ -16,8 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { updateProduct } from "@/lib/actions/product.actions";
 import { addProductSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
@@ -27,10 +29,51 @@ const EditProduct = ({ product }: any) => {
   console.log(product);
   const form = useForm<z.infer<typeof addProductSchema>>({
     resolver: zodResolver(addProductSchema),
-    defaultValues: product,
+    defaultValues: {
+      title: product.title,
+      description: product.description,
+      price: product.price.toString(),
+      discountPrice: product.discountPrice.toString(),
+      brand: product.brand,
+      stock: product.stock.toString(),
+      category: product.category,
+      thumbnail: product.thumbnail,
+    },
   });
 
-  async function onSubmit(values: z.infer<typeof addProductSchema>) {}
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof addProductSchema>) {
+    try {
+      const {
+        title,
+        description,
+        price,
+        discountPrice,
+        brand,
+        stock,
+        category,
+        thumbnail,
+      } = values;
+
+      await updateProduct({
+        productId: product._id,
+        title,
+        description,
+        price: parseInt(price),
+        discountPrice: parseInt(discountPrice),
+        brand,
+        stock: parseInt(stock),
+        category,
+        thumbnail,
+      });
+
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   return (
     <Dialog>

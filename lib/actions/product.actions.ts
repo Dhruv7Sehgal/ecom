@@ -64,6 +64,44 @@ export async function addProduct(params: ProductParams) {
   }
 }
 
+export interface EditProductParams extends ProductParams {
+  productId: string;
+}
+
+export async function updateProduct(params: EditProductParams) {
+  try {
+    connectToDatabase();
+
+    const {
+      productId,
+      title,
+      thumbnail,
+      description,
+      price,
+      discountPrice,
+      brand,
+      stock,
+      category,
+    } = params;
+
+    await Product.findByIdAndUpdate(productId, {
+      title,
+      thumbnail,
+      description,
+      price: Number(price),
+      discountPrice: Number(discountPrice),
+      brand,
+      stock,
+      category,
+    });
+
+    revalidatePath("/");
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export async function deleteProduct(params: any) {
   try {
     connectToDatabase();
