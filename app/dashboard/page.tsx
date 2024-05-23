@@ -1,7 +1,7 @@
 "use client";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -29,10 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductSchema } from "@/lib/validations";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -42,7 +38,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { addProduct } from "@/lib/actions/product.actions";
+import { addProductSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -51,29 +51,29 @@ export default function Dashboard() {
   });
 
   async function onSubmit(values: z.infer<typeof addProductSchema>) {
-    try {
-      const {
-        title,
-        description,
-        prize,
-        discountPrice,
-        brand,
-        stock,
-        category,
-      } = values;
-      await addProduct({
-        title,
-        description,
-        prize: parseInt(prize),
-        discountPrice: parseInt(discountPrice),
-        brand,
-        stock,
-        category,
-      });
-      router.push("/");
-    } catch (err) {
-      throw err;
-    }
+    const {
+      title,
+      description,
+      thumbnail,
+      price,
+      discountPrice,
+      brand,
+      stock,
+      category,
+    } = values;
+
+    await addProduct({
+      title,
+      description,
+      price: parseInt(price),
+      discountPrice: parseInt(discountPrice),
+      brand,
+      stock: parseInt(stock),
+      category,
+      thumbnail,
+    });
+
+    router.push("/");
   }
 
   return (
@@ -102,7 +102,7 @@ export default function Dashboard() {
                 </BreadcrumbList>
               </Breadcrumb>
               <div className="relative ml-auto flex-1 md:grow-0">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search..."
@@ -174,12 +174,12 @@ export default function Dashboard() {
                       />
                       <FormField
                         control={form.control}
-                        name="prize"
+                        name="price"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Prize</FormLabel>
+                            <FormLabel>Price</FormLabel>
                             <FormControl>
-                              <Input placeholder="Prize" {...field} />
+                              <Input placeholder="price" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -242,6 +242,20 @@ export default function Dashboard() {
                             <FormLabel>Category</FormLabel>
                             <FormControl>
                               <Input placeholder="Category" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="thumbnail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Thumbnail</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Thumbnail" {...field} />
                             </FormControl>
 
                             <FormMessage />
